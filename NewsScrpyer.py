@@ -21,7 +21,8 @@ class NewsScrpyer:
 
     def tagWithMostP(self, dom):
         import bs4
-        print(dom.children)
+        for child in dom.children
+            print(child.get('name'))
         #dom = bs4.BeautifulSoup(page, "html.parser")
 
 
