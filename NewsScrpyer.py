@@ -16,15 +16,20 @@ class NewsScrpyer:
         'DNT': '1',
         'Pragma': 'no-cache',
         'Upgrade-Insecure-Requests': '1',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:59.0) Gecko/20100101 Firefox/59.0'
     }
+
     dom = None
 
     def getDom(self, url):
         import bs4
         import requests
 
-        page = requests.get(url, headers=self.headers).content.replace('\n', '').replace(
+        req = requests.get(url, headers=self.headers)
+        # page = str(req.content, req.encoding)
+        # print(req.encoding)
+        page = str(req.content, 'utf-8')
+        page = page.replace('\n', '').replace(
             '\t', '').replace('\r', '').replace('\xa0', '')
         self.dom = bs4.BeautifulSoup(page, "html.parser")
         return self.dom
@@ -47,9 +52,43 @@ class NewsScrpyer:
     def getContent(self, dom=None):
         if dom is None:
             dom = self.dom
-
-        return self.tagWithMostP(dom).text
+        # print(self.tagWithMostP(dom).text)
+        return self.tagWithMostP(dom).get_text(separator='\n')
         # dom = bs4.BeautifulSoup(page, "html.parser")
+
+    def getMeta(self, dom=None):
+        if dom is None:
+            dom = self.dom
+
+        metas = dom.findAll(name="meta", recursive=True)
+        metaObj = {}
+        for meta in metas:
+            if meta.attrs.get('name') and meta.attrs.get('content'):
+                metaObj[meta.attrs.get('name')] = meta.attrs.get('content')
+        return metaObj
+
+    def getTitle(self, dom=None):
+        if dom is None:
+            dom = self.dom
+
+        return dom.find(name='title').text
+
+    def getPage(self, dom=None):
+        if dom is None:
+            dom = self.dom
+
+        pageObj = {}
+        pageObj['meta'] = self.getMeta(dom)
+        pageObj['content'] = self.getContent(dom)
+        pageObj['title'] = self.getTitle(dom)
+
+        return pageObj
+
+    def scrypyURL(self, url):
+        dom = self.getDom(url)
+        pageObj = self.getPage(dom)
+        pageObj['url'] = url
+        return pageObj
 
 
 def Main():
@@ -59,9 +98,11 @@ def Main():
     import requests
     import bs4
     # print(scryper.login(user='g07xw6@163.com', passwd='Bonnie123.'))
-    url = 'http://blog.sina.com.cn/s/blog_7d75a1df0102y1y7.html?tj=1'
-    dom = scryper.getDom(url)
-    print(scryper.getContent(dom))
+    url = 'https://blog.csdn.net/troylee1986/article/details/6772199'
+    page = scryper.scrypyURL(url)
+    import json
+    print(json.dumps(page, ensure_ascii=False,
+                     indent=4, sort_keys=True))
 
 
 Main()
