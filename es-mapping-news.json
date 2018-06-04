@@ -1,0 +1,45 @@
+{
+    "settings": {
+        "number_of_replicas": 0,
+        "number_of_shards": 1,
+
+        "analysis": {
+            "analyzer": {
+                "default": {
+                    "type": "ik_smart",
+                    "tokenizer": "ik_smart"
+                },
+                "url": {
+                    "type": "custom",
+                    "tokenizer": "path_hierarchy"
+                }
+            }
+        }
+    },
+    "mappings": {
+        "news": {
+            "properties": {
+                "title": {
+                    "type": "text"
+                },
+                "content": {
+                    "type": "text"
+                },
+                "url": {
+                    "type": "text",
+                    "analyzer": "url",
+                    "search_analyzer": "url"
+                },
+                "meta": {
+                    "type": "nested",
+                    "properties": {
+                        "keywords": {
+                            "type": "text",
+                            "analyzer": "ik_smart"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

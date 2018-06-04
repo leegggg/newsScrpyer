@@ -12,7 +12,7 @@ headers = {
 }
 
 
-def getDom(url): 
+def getDom(url):
     import bs4
     import requests
     req = requests.get(url, headers=headers)
