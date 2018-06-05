@@ -17,8 +17,12 @@
         }
     },
     "mappings": {
-        "news": {
+        "page": {
             "properties": {
+                "timestampScrpy": {
+                    "type": "date",
+                    "format": "epoch_second"
+                },
                 "title": {
                     "type": "text"
                 },
@@ -36,6 +40,20 @@
                         "keywords": {
                             "type": "text",
                             "analyzer": "ik_smart"
+                        }
+                    }
+                },
+                "links": {
+                    "type": "nested",
+                    "properties": {
+                        "title": {
+                            "type": "text",
+                            "analyzer": "ik_smart"
+                        },
+                        "url": {
+                            "type": "text",
+                            "analyzer": "url",
+                            "search_analyzer": "url"
                         }
                     }
                 }

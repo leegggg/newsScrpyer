@@ -1,0 +1,2 @@
+curl -XPUT http://localhost:9200/news -H 'Content-Type:application/json' -d "@./es-mapping-news.json"
+curl -XDELETE http://localhost:9200/news

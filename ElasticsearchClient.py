@@ -1,27 +1,44 @@
-from elasticsearch import Elasticsearch
-from NewsScrpyer import NewsScrpyer
-import uuid
-
-
 class ElasticsearchClient():
+
     es = {}
     index = "news"
-    docType = "news"
+    docType = "page"
 
     def __init__(self):
+        from elasticsearch import Elasticsearch
         self.es = Elasticsearch()
 
         return
 
     def postNews(self, news):
+        import uuid
         id = str(uuid.uuid4())
-        self.es.index(index=self.index, doc_type="news", id=id,
+        self.es.index(index=self.index, doc_type=self.docType, id=id,
                       body=news)
         return
 
     def getNews(self, attrs):
 
         return
+
+    def hasUrl(self, url):
+        searchBody = {
+            "size": 0,
+            "query": {
+                "term": {
+                    "url": url
+                }
+            }
+        }
+        res = self.es.search(index=self.index, body=searchBody)
+
+        hits = 0
+        try:
+            hits = res['hits']['total']
+        except:
+            pass
+
+        return hits
 
 
 """
@@ -33,7 +50,8 @@ curl -XGET "localhost:9200/news/_search?pretty=true" -H 'Content-Type: applicati
 
 
 def main():
-    scryper = NewsScrpyer()
+    from PageScrpyer import PageScrpyer
+    scryper = PageScrpyer()
     client = ElasticsearchClient()
     # index = elasticsearch.client.IndicesClient(client.es)
     # settingFp = open("es-mapping-news.json")
@@ -52,6 +70,7 @@ def main():
     print(json.dumps(page, ensure_ascii=False,
                      indent=4, sort_keys=True))
     client.postNews(page)
+    print(client.hasUrl(url))
 
 
 if __name__ == "__main__":
