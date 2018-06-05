@@ -1,55 +1,76 @@
 import logging
+from PageScrpyer import PageScrpyer as Scrpyer
+from ElasticsearchClient import ElasticsearchClient as DBClient
+from RabbitmqClient import RabbitmqClient as MqClient
 
 
-def scrpyPage(url, scrpyer, client):
-    page = scrpyer.scrypyURL(url)
-    client.postNews(page)
-    return page
+class InternetScrpyer():
+    mqClient = None
+    scrpyer = None
+    dbClient = None
+    sleepSec = 0.1
 
+    def __init__(self):
+        self.scrpyer = Scrpyer()
+        self.mqClient = MqClient(host="172.17.0.1")
+        self.dbClient = DBClient()
+        return
 
-def scrpyPages(urls, scrpyer, client, level=0, maxLevel=3):
-    while True:
-        url = ""
-        if len(urls) > 0:
-            url = urls.pop(0)
-        else:
-            return
-
+    def scrpyPage(self, url):
         hasUrl = 0
         try:
-            hasUrl = client.hasUrl(url)
+            hasUrl = self.dbClient.hasUrl(url)
         except:
             pass
 
-        logging.log(logging.INFO+1,
-                    "[{:04d}][{:02d}]{:s}".format(len(urls), hasUrl, url))
-        if hasUrl > 0:
-            continue
+        page = self.scrpyer.scrypyURL(url)
+        self.dbClient.postNews(page)
 
-        page = None
-        try:
-            page = scrpyPage(url, scrpyer, client)
-        except Exception as e:
-            logging.warning(e)
-            continue
         for link in page.get("links"):
-            if link.get("url"):
-                urls.append(link.get("url"))
+            if not link.get("url"):
+                continue
+            subUrl = link.get("url")
+            hasUrl = self.dbClient.hasUrl(subUrl)
+            if hasUrl < 1:
+                self.mqClient.push(subUrl)
 
-    return
+        return page
+
+    def doScrpy(self):
+        import time
+        url = self.mqClient.pop()
+        if not url:
+            time.sleep(self.sleepSec)
+            return None
+        url = url.decode()
+
+        hasUrl = 0
+        try:
+            hasUrl = self.dbClient.hasUrl(url)
+        except:
+            pass
+
+        logging.log(logging.INFO+1, "[{:02d}]{:s}".format(hasUrl, url))
+
+        if hasUrl > 0:
+            return None
+
+        return self.scrpyPage(url)
+
+    def run(self):
+        while True:
+            try:
+                self.doScrpy()
+            except:
+                pass
 
 
 def main():
-    from PageScrpyer import PageScrpyer
-    from ElasticsearchClient import ElasticsearchClient
 
     logging.basicConfig(level=logging.INFO+1)
 
-    client = ElasticsearchClient()
-    scrpyer = PageScrpyer()
-    url = "https://news.sina.com.cn/"
-    urls = [url]
-    scrpyPages(urls, scrpyer, client, level=0, maxLevel=2)
+    scrpyer = InternetScrpyer()
+    scrpyer.run()
 
     return 0
 

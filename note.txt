@@ -1,2 +1,37 @@
-curl -XPUT http://localhost:9200/news -H 'Content-Type:application/json' -d "@./es-mapping-news.json"
 curl -XDELETE http://localhost:9200/news
+curl -XPUT http://localhost:9200/news -H 'Content-Type:application/json' -d "@./es-mapping-news.json"
+
+
+kill $(ps auxwww | grep Intern | grep -Eo 'ylin *[0-9]+'| grep -Eo [0-9]+ | head -n 1)
+
+source ./env/bin/activate;python ./InternetScrpyer.py ;
+
+
+
+for i in $(seq 1 16);do python ./InternetScrpyer.py &;done
+
+
+for i in $(seq 1 24)
+do
+  python ./InternetScrpyer.py &
+done
+
+for i in $(seq 1 30);do kill $(ps auxwww | grep Intern | grep -Eo 'ylin *[0-9]+'| grep -Eo [0-9]+ | head -n 1);done
+
+
+version: '2'
+services:
+  rabbitMq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+      - "5671:5671"
+    environment: 
+      RABBITMQ_DEFAULT_PASS: pass
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_VHOST: vhost
+      RABBITMQ_VM_MEMORY_HIGH_WATERMARK: 512MiB
+      HOSTNAME: localhost
+    volumes:
+      - ./data:/var/lib/rabbitmq

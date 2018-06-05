@@ -15,7 +15,7 @@ headers = {
 def getDom(url):
     import bs4
     import requests
-    req = requests.get(url, headers=headers)
+    req = requests.get(url, headers=headers, timeout=(10, 10))
     # req = requests.get(url)
     # page = str(req.content, req.encoding)
     # print(req.encoding)
