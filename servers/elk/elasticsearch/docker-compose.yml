@@ -1,0 +1,24 @@
+version: '2'
+
+services:
+
+  elasticsearch:
+    image: mscp.linyz.net/elasticsearch:v6.2.4-ik
+    container_name: elasticsearch
+    volumes:
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - /home/ylin/elk/elasticsearch/data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - elk
+
+networks:
+
+  elk:
+    driver: bridge

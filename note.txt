@@ -6,6 +6,12 @@ kill $(ps auxwww | grep Intern | grep -Eo 'ylin *[0-9]+'| grep -Eo [0-9]+ | head
 
 source ./env/bin/activate;python ./InternetScrpyer.py ;
 
+sudo docker-compose -f servers/rabbitmq/docker-compose.yml rm -sf
+sudo docker-compose -f servers/rabbitmq/docker-compose.yml rm -sf
+
+sudo docker-compose -f servers/rabbitmq/docker-compose.yml up -d --force-recreate
+sudo docker-compose -f servers/elk/elasticsearch/docker-compose.yml up -d --force-recreate
+sudo docker-compose -f servers/elk/kibana/docker-compose.yml up -d --force-recreate
 
 
 for i in $(seq 1 16);do python ./InternetScrpyer.py &;done
