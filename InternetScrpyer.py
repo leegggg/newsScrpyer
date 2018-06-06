@@ -16,46 +16,46 @@ class InternetScrpyer():
         self.dbClient = DBClient()
         return
 
-    def scrpyPage(self, url):
+    def scrpyPage(self, url, level=None):
+        if level is None:
+            level = self.mqClient.defaultLevel
+
         hasUrl = 0
         try:
             hasUrl = self.dbClient.hasUrl(url)
         except:
             pass
 
+        logging.log(logging.INFO+1,
+                    "[{:02d}][{:02d}]{:s}".format(level, hasUrl, url))
+
+        if level > 0 and hasUrl > 0:
+            return {}
+
         page = self.scrpyer.scrypyURL(url)
         self.dbClient.postNews(page)
-
+        subLevel = level + 1
         for link in page.get("links"):
             if not link.get("url"):
                 continue
             subUrl = link.get("url")
             hasUrl = self.dbClient.hasUrl(subUrl)
             if hasUrl < 1:
-                self.mqClient.push(subUrl)
+                self.mqClient.push(data=subUrl, level=subLevel)
 
         return page
 
     def doScrpy(self):
         import time
-        url = self.mqClient.pop()
-        if not url:
+        task = self.mqClient.pop()
+        if not task:
             time.sleep(self.sleepSec)
             return None
-        url = url.decode()
 
-        hasUrl = 0
-        try:
-            hasUrl = self.dbClient.hasUrl(url)
-        except:
-            pass
+        level = task.get("level")
+        url = task.get("url").decode()
 
-        logging.log(logging.INFO+1, "[{:02d}]{:s}".format(hasUrl, url))
-
-        if hasUrl > 0:
-            return None
-
-        return self.scrpyPage(url)
+        return self.scrpyPage(url, level=level)
 
     def run(self):
         while True:

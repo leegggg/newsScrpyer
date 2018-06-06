@@ -6,6 +6,9 @@ class RabbitmqClient(MqClient):
     connection = None
     channel = None
     queue = ""
+    maxPriority = 9
+    defaultLevel = 5
+    maxLevel = 6
 
     def __init__(self, host="localhost", port=5672,
                  virtual_host="vhost", user="user", passwd="pass",
@@ -19,8 +22,9 @@ class RabbitmqClient(MqClient):
                                       credentials=credential))
 
         self.channel = self.connection.channel()
-
-        self.channel.queue_declare(queue=queue, durable=True)
+        queueArgument = {"x-max-priority": self.maxPriority + 1}
+        self.channel.queue_declare(
+            queue=queue, durable=True, arguments=queueArgument)
 
         return
 
@@ -53,29 +57,37 @@ class RabbitmqClient(MqClient):
 
     def pop(self):
         respon = self.channel.basic_get(queue=self.queue, no_ack=True)
-        # for respon in self.channel.consume(self.queue):
-        #    try:
-        #        body = respon[2]
-        #        break
-        #    except:
-        #        pass
+        task = {}
+        if not respon[0] is None:
+            priority = self.maxPriority - self.defaultLevel
+            try:
+                priority = respon[1].priority
+            except:
+                pass
+            level = self.maxPriority - priority
+            task = {"url": respon[2], "level": level}
+        return task
 
-        # body = str(body)
-        return respon[2]
-
-    def push(self, data):
+    def push(self, data, level=None):
+        if level is None:
+            level = self.defaultLevel
+        if level > self.maxLevel:
+            level = self.maxLevel
+            
+        priority = self.maxPriority - level
         self.channel.basic_publish(exchange='',
                                    routing_key=self.queue,
                                    body=data,
                                    properties=pika.BasicProperties(
                                        delivery_mode=2,  # make message persistent
+                                       priority=priority
                                    ))
         return
 
 
 def main():
     mqClient = RabbitmqClient(host="172.17.0.1")
-    mqClient.push("http://news.sina.com.cn/")
+    mqClient.push("http://news.sina.com.cn/", 0)
     # print(mqClient.pop())
 
 
