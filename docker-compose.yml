@@ -1,0 +1,6 @@
+version: '2'
+services:
+  rabbitMq:
+    image: mscp.linyz.net/news-scrpyer:v1a
+    volumes:
+      - ./conf/config.json:/app/conf/config.json
