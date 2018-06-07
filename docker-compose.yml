@@ -6,3 +6,4 @@ services:
       replicas: ${SCRPYER_REPLICAS}
     volumes:
       - ./config.json:/app/conf/config.json
+# docker-compose pull && docker-compose up
