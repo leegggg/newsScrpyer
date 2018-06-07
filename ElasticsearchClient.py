@@ -4,7 +4,7 @@ class ElasticsearchClient():
     index = "news"
     docType = "page"
 
-    def __init__(self):
+    def __init__(self, hosts=["localhost:9200"]):
         from elasticsearch import Elasticsearch
         self.es = Elasticsearch()
 

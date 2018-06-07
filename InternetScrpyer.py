@@ -13,7 +13,7 @@ class InternetScrpyer():
     def __init__(self):
         self.scrpyer = Scrpyer()
         self.mqClient = MqClient(host="172.17.0.1")
-        self.dbClient = DBClient()
+        self.dbClient = DBClient(hosts=["172.17.0.1:9200"])
         return
 
     def scrpyPage(self, url, level=None):
@@ -61,7 +61,8 @@ class InternetScrpyer():
         while True:
             try:
                 self.doScrpy()
-            except:
+            except Exception as e:
+                logging.warning(str(e))
                 pass
 
 
