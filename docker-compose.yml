@@ -3,6 +3,6 @@ services:
   newsscrpyer:
     image: mscp.linyz.net/news-scrpyer:v1a
     deploy:
-      replicas: 24
+      replicas: ${SCRPYER_REPLICAS}
     volumes:
       - ./config.json:/app/conf/config.json
