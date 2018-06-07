@@ -6,7 +6,7 @@ class ElasticsearchClient():
 
     def __init__(self, hosts=["localhost:9200"]):
         from elasticsearch import Elasticsearch
-        self.es = Elasticsearch()
+        self.es = Elasticsearch(hosts=hosts)
 
         return
 

@@ -73,7 +73,7 @@ class RabbitmqClient(MqClient):
             level = self.defaultLevel
         if level > self.maxLevel:
             level = self.maxLevel
-            
+
         priority = self.maxPriority - level
         self.channel.basic_publish(exchange='',
                                    routing_key=self.queue,
@@ -86,7 +86,8 @@ class RabbitmqClient(MqClient):
 
 
 def main():
-    mqClient = RabbitmqClient(host="172.17.0.1")
+    # mqClient = RabbitmqClient(host="172.17.0.1")
+    mqClient = RabbitmqClient(host="rabbitmq.news.linyz.net")
     mqClient.push("http://news.sina.com.cn/", 0)
     # print(mqClient.pop())
 
