@@ -1,6 +1,8 @@
-version: '2'
+version: '3'
 services:
-  rabbitMq:
+  newsscrpyer:
     image: mscp.linyz.net/news-scrpyer:v1a
+    deploy:
+      replicas: 24
     volumes:
-      - ./conf/config.json:/app/conf/config.json
+      - ./config.json:/app/conf/config.json
