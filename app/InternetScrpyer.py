@@ -85,11 +85,12 @@ class InternetScrpyer():
 
 
 def main():
-
-    logging.basicConfig(level=logging.INFO+1)
     import json
     import sys
     config = {
+        'log': {
+            'level': 20
+        },
         'mq': {
             'host': 'localhost'
         },
@@ -117,7 +118,8 @@ def main():
 
     # config['mq']['host'] = '9.111.111.233'
     # config['db']['hosts'] = ['9.111.213.147:9200']
-
+    logging.basicConfig(level=config['log']['level'])
+    logging.log(level=100, msg=config)
     scrpyer = InternetScrpyer(config=config)
     scrpyer.run()
 

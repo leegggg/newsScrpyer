@@ -1,6 +1,7 @@
 import logging
 headers = {
     # 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept': 'text/html,application/xhtml+xml,application/xml',
     # 'Accept-Encoding': 'gzip, deflate, br',
     # 'Accept-Language': 'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2',
     # 'Cache-Control': 'no-cache',
@@ -23,6 +24,13 @@ def getDom(url):
     # print(req.encoding)
 
     page = None
+    acceptableContentTypes = [
+        'text/html', 'application/xhtml+xml', 'application/xml']
+    if req.headers['content-type'] not in acceptableContentTypes:
+        logging.debug("ContentType:[{}]{}".format(
+            req.headers['content-type'], url))
+        return page
+
     try:
         logging.debug("tryUtf8:{}".format(url))
         page = req.content.decode('utf-8')
@@ -46,6 +54,7 @@ def main():
     getDom('http://slide.sports.sina.com.cn/o/slide_2_53064_60676.html')
     getDom('http://news.sina.com.cn/')
     getDom('http://zhuanlan.sina.com.cn/')
+    getDom('http://i1.sinaimg.cn/edu/sinaopen/SinaOpencourse_V2.02.apk')
 
     return 0
 
