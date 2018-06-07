@@ -30,3 +30,5 @@ networks:
 # sysctl -w vm.max_map_count=262144
 # ulimit -u 4096
 # ulimit -n 65536
+# mkdir -p /home/ylin/elk/elasticsearch/data
+# chown -R 1000:1000 /home/ylin/elk/elasticsearch/data
