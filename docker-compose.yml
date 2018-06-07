@@ -1,4 +1,4 @@
-version: '3'
+version: '3.4'
 services:
   newsscrpyer:
     image: mscp.linyz.net/news-scrpyer:v1a
