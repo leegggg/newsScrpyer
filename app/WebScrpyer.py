@@ -29,7 +29,13 @@ class WebScrpyer:
         if dom is None:
             dom = self.dom
 
-        return dom.find(name='title').text
+        title = ""
+        try:
+            title = dom.find(name='title').text
+        except:
+            pass
+
+        return title
 
     def getPage(self, dom=None):
         if dom is None:
