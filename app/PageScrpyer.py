@@ -34,7 +34,17 @@ class PageScrpyer(WebScrpyer):
         # print(self.tagWithMostP(dom).text)
         import maxNumP as pageToArticle
 
-        return pageToArticle.pageToArticle(dom).get_text(separator='\n')
+        content = ""
+        try:
+            content = pageToArticle.pageToArticle(dom).get_text(separator='\n')
+        except:
+            try:
+                content = dom.get_text(separator='\n')
+            except:
+                pass
+            pass
+
+        return content
         # dom = bs4.BeautifulSoup(page, "html.parser")
 
     def getPage(self, dom=None):
@@ -54,6 +64,7 @@ def main():
     #    'https://ad.toutiao.com/overture/index/account_balance/'))
     # print(scryper.login(user='g07xw6@163.com', passwd='Bonnie123.'))
     url = 'https://www.centos.bz/2017/10/kubernetes%E4%B9%8B%E6%9A%82%E5%81%9C%E5%AE%B9%E5%99%A8/'
+    url = "http://www.legaldaily.com.cn"
     page = scryper.scrypyURL(url)
     import json
     print(json.dumps(page, ensure_ascii=False,

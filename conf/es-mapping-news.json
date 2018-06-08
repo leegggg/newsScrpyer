@@ -1,5 +1,6 @@
 {
     "settings": {
+        "index.mapping.total_fields.limit": 20000,
         "number_of_replicas": 0,
         "number_of_shards": 1,
 
