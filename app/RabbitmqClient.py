@@ -88,6 +88,15 @@ class RabbitmqClient(MqClient):
 def main():
     # mqClient = RabbitmqClient(host="172.17.0.1")
     mqClient = RabbitmqClient(host="rabbitmq.news.linyz.net")
+
+    import sys
+    if len(sys.argv) >= 3:
+        url = sys.argv[1]
+        level = int(float(sys.argv[2]))
+        print("[{}]{}".format(level, url))
+        mqClient.push(url, level)
+        return
+
     mqClient.push("http://news.sina.com.cn/", 0)
     # print(mqClient.pop())
 
