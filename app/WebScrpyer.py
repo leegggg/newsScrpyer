@@ -48,3 +48,20 @@ class WebScrpyer:
         pageObj['url'] = url
         pageObj['timestampScrpy'] = datetime.now().timestamp()
         return pageObj
+
+
+def main():
+    scryper = WebScrpyer()
+    # print(scryper.getIndexList(
+    #    'https://ad.toutiao.com/overture/index/account_balance/'))
+    # print(scryper.login(user='g07xw6@163.com', passwd='Bonnie123.'))
+    # url = 'https://www.centos.bz/2017/10/kubernetes%E4%B9%8B%E6%9A%82%E5%81%9C%E5%AE%B9%E5%99%A8/'
+    url = "http://news.163.com"
+    page = scryper.scrypyURL(url)
+    import json
+    print(json.dumps(page, ensure_ascii=False,
+                     indent=4, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

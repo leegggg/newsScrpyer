@@ -26,7 +26,11 @@ def getDom(url):
     page = None
     acceptableContentTypes = [
         'text/html', 'application/xhtml+xml', 'application/xml']
-    if req.headers['content-type'] not in acceptableContentTypes:
+
+    for contentType in acceptableContentTypes:
+        if req.headers['content-type'].find(contentType) >= 0:
+            break
+    else:
         logging.debug("ContentType:[{}]{}".format(
             req.headers['content-type'], url))
         return page
@@ -45,16 +49,18 @@ def getDom(url):
 
     page = page.replace('\n', '').replace(
         '\t', '').replace('\r', '').replace('\xa0', '')
+    logging.debug("length of page: {}".format(len(page)))
     dom = bs4.BeautifulSoup(page, "html.parser")
     return dom
 
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
-    getDom('http://slide.sports.sina.com.cn/o/slide_2_53064_60676.html')
-    getDom('http://news.sina.com.cn/')
-    getDom('http://zhuanlan.sina.com.cn/')
-    getDom('http://i1.sinaimg.cn/edu/sinaopen/SinaOpencourse_V2.02.apk')
+    # getDom('http://slide.sports.sina.com.cn/o/slide_2_53064_60676.html')
+    # getDom('http://news.sina.com.cn/')
+    # getDom('http://zhuanlan.sina.com.cn/')
+    # getDom('http://i1.sinaimg.cn/edu/sinaopen/SinaOpencourse_V2.02.apk')
+    getDom('http://news.163.com')
 
     return 0
 

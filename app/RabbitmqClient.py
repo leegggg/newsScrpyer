@@ -103,6 +103,7 @@ def main():
         level = 0
         with open(sys.argv[1]) as f:
             for url in f:
+                url = url.strip()
                 logging.critical("[{}]{}".format(level, url))
                 mqClient.push(url, level)
         return
