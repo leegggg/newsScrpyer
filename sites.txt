@@ -4,10 +4,10 @@ http://news.sohu.com
 http://365jilin.com
 http://cbgc3.scol.com.cn
 http://cn.chinareviewnews.com
-http://dzb.jinbaonet.com/html/2017-09/30/node_23.htm
-http://e.chengdu.cn/html/2017-09/30/node_2.htm
+http://dzb.jinbaonet.com
+http://e.chengdu.cn
 http://epaper.jinghua.cn
-http://epaper.oeeee.com/epaper/A/html/2017-09/30/node_20850.htm
+http://epaper.oeeee.com
 http://gb.cri.cn
 http://hnrb.voc.com.cn
 http://hongxingxinwen.com
@@ -17,12 +17,11 @@ http://news.enorth.com.cn
 http://news.hebei.com.cn
 http://news.iyaxin.com
 http://news.sina.com.cn/media.html
-http://njrb.njdaily.cn/njrb/html/2017-09/30/node_1.htm
+http://njrb.njdaily.cn
 http://rednet.cn
 http://ssic.cass.cn
 http://tzzb.dooland.com
 http://wallstreetcn.com
-http://war.163.com/special/00012ABP/junshifengmianxiugjzw.html
 http://workercn.cn
 http://www.1news.cc
 http://www.21cn.com
@@ -36,7 +35,6 @@ http://www.bjnews.com.cn
 http://www.bundpic.com
 http://www.cankaoxiaoxi.com
 http://www.cctv.com
-http://www.cctv.com/default.shtml
 http://www.ccvic.com
 http://www.ce.cn
 http://www.changjiangtimes.com
@@ -60,7 +58,6 @@ http://www.cqtimes.cn
 http://www.cqwb.com.cn
 http://www.cri.cn
 http://www.cyol.com
-http://www.cyol.net/node/index.htm
 http://www.dahe.cn
 http://www.daynews.com.cn
 http://www.dayoo.com
@@ -108,7 +105,6 @@ http://www.lzcbnews.com
 http://www.morningpost.com.cn
 http://www.my399.com
 http://www.nanfangdaily.com.cn
-http://www.nanfangdaily.com.cn/rwzk
 http://www.nbd.com.cn
 http://www.nddaily.com
 http://www.nen.com.cn
@@ -147,7 +143,6 @@ http://www.xbsb.com.cn
 http://www.xinhuanet.com
 http://www.xinjiangnet.com.cn
 http://www.xkb.com.cn
-http://www.xkb.com.cn./index.php
 http://www.xwh.cn
 http://www.xwhb.net
 http://www.xwwb.com
