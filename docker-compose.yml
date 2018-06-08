@@ -6,6 +6,10 @@ services:
 #     replicas: ${SCRPYER_REPLICAS}
 #     deploy:
 #       replicas: ${SCRPYER_REPLICAS}
+    dns:
+      - 8.8.8.8
+      - 9.9.9.9
+      - 9.0.146.50
     volumes:
       - ./config.json:/app/conf/config.json
 # docker-compose pull && docker-compose up -d --force-recreate
