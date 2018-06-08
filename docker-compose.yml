@@ -3,7 +3,7 @@ services:
   newsscrpyer:
     image: mscp.linyz.net/news-scrpyer:v1a
     restart: always
-    replicas: ${SCRPYER_REPLICAS}
+#     replicas: ${SCRPYER_REPLICAS}
 #     deploy:
 #       replicas: ${SCRPYER_REPLICAS}
     volumes:
