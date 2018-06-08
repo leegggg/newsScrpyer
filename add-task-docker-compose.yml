@@ -6,8 +6,10 @@ services:
 #     replicas: ${SCRPYER_REPLICAS}
 #     deploy:
 #       replicas: ${SCRPYER_REPLICAS}
+    command: python /app/RabbitmqClient.py /sites.txt
     volumes:
       - ./config.json:/app/conf/config.json
+      - ./sites.txt:/sites.txt
 # docker-compose pull && docker-compose up -d --force-recreate
 # docker-compose up -d --scale newsscrpyer=1
 # docker logs newsscrpyer_newsscrpyer_1 -f

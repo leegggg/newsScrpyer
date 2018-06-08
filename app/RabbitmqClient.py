@@ -87,14 +87,24 @@ class RabbitmqClient(MqClient):
 
 def main():
     # mqClient = RabbitmqClient(host="172.17.0.1")
-    mqClient = RabbitmqClient(host="rabbitmq.news.linyz.net")
-
+    #mqClient = RabbitmqClient(host="rabbitmq.news.linyz.net")
+    mqClient = RabbitmqClient("9.111.111.233")
+    import logging
+    logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s")
     import sys
     if len(sys.argv) >= 3:
         url = sys.argv[1]
         level = int(float(sys.argv[2]))
-        print("[{}]{}".format(level, url))
+        logging.critical("[{}]{}".format(level, url))
         mqClient.push(url, level)
+        return
+
+    if len(sys.argv) == 2:
+        level = 0
+        with open(sys.argv[1]) as f:
+            for url in f:
+                logging.critical("[{}]{}".format(level, url))
+                mqClient.push(url, level)
         return
 
     mqClient.push("http://news.sina.com.cn/", 0)
