@@ -1,8 +1,7 @@
 version: '3.4'
 services:
-  newsscrpyer:
+  add-task:
     image: mscp.linyz.net/news-scrpyer:latest
-    restart: always
 #     replicas: ${SCRPYER_REPLICAS}
 #     deploy:
 #       replicas: ${SCRPYER_REPLICAS}
