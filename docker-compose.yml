@@ -2,8 +2,11 @@ version: '3.4'
 services:
   newsscrpyer:
     image: mscp.linyz.net/news-scrpyer:v1a
+    restart: always
+    replicas: ${SCRPYER_REPLICAS}
 #     deploy:
 #       replicas: ${SCRPYER_REPLICAS}
     volumes:
       - ./config.json:/app/conf/config.json
 # docker-compose pull && docker-compose up -d --force-recreate
+# docker-compose up -d --scale newsscrpyer=1
