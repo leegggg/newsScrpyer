@@ -6,7 +6,7 @@ class WebScrpyer:
     """[summary]
     """
     import bs4
-
+ 
     dom = None
 
     def getDom(self, url):

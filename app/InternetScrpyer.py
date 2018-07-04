@@ -1,4 +1,4 @@
-import logging
+import logging 
 from PageScrpyer import PageScrpyer as Scrpyer
 from ElasticsearchClient import ElasticsearchClient as DBClient
 from RabbitmqClient import RabbitmqClient as MqClient
@@ -54,7 +54,7 @@ class InternetScrpyer():
             'page': False
         }
 
-        try:
+        try: 
             task = self.mqClient.pop()
             if not task:
                 time.sleep(self.sleepSec)

@@ -1,5 +1,5 @@
 # pylint: disable-msg=F0002
-class ElasticsearchClient():
+class DBClinet():
 
     # es = {}
     # index = "news"
@@ -47,7 +47,7 @@ curl -XGET "localhost:9200/news/_search?pretty=true" -H 'Content-Type: applicati
 def main():
     from PageScrpyer import PageScrpyer
     scryper = PageScrpyer()
-    client = ElasticsearchClient()
+    client = DBClinet()
     # index = elasticsearch.client.IndicesClient(client.es)
     # settingFp = open("es-mapping-news.json")
     # indexSetting = json.load(settingFp)

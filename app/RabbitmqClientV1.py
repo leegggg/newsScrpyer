@@ -1,5 +1,5 @@
 from MqClient import MqClient
-import pika
+import pika 
 
 
 class RabbitmqClient(MqClient):
@@ -10,22 +10,16 @@ class RabbitmqClient(MqClient):
     defaultLevel = 5
     maxLevel = 6
 
-    def __init__(self,
-                 host="localhost",
-                 port=5672,
-                 virtual_host="vhost",
-                 user="user",
-                 passwd="pass",
+    def __init__(self, host="localhost", port=5672,
+                 virtual_host="vhost", user="user", passwd="pass",
                  queue="scrpy"):
         self.queue = queue
         credential = pika.credentials.PlainCredentials(
             user, passwd, erase_on_connect=False)
         self.connection = pika.BlockingConnection(
-            pika.ConnectionParameters(
-                host=host,
-                port=port,
-                virtual_host=virtual_host,
-                credentials=credential))
+            pika.ConnectionParameters(host=host, port=port,
+                                      virtual_host=virtual_host,
+                                      credentials=credential))
 
         self.channel = self.connection.channel()
         queueArgument = {"x-max-priority": self.maxPriority + 1}
@@ -81,13 +75,13 @@ class RabbitmqClient(MqClient):
             level = self.maxLevel
 
         priority = self.maxPriority - level
-        self.channel.basic_publish(
-            exchange='',
-            routing_key=self.queue,
-            body=data,
-            properties=pika.BasicProperties(
-                delivery_mode=2,  # make message persistent
-                priority=priority))
+        self.channel.basic_publish(exchange='',
+                                   routing_key=self.queue,
+                                   body=data,
+                                   properties=pika.BasicProperties(
+                                       delivery_mode=2,  # make message persistent
+                                       priority=priority
+                                   ))
         return
 
 

@@ -4,3 +4,4 @@ requests
 pika
 chardet
 elasticsearch
+pymongo
