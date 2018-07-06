@@ -10,6 +10,15 @@ class RabbitmqClient(MqClient):
     defaultLevel = 5
     maxLevel = 6
 
+    def getPriority(self, level, priorityOffset):
+        priority = self.maxPriority - level + priorityOffset
+        if priority > self.maxPriority:
+            priority = self.maxPriority
+        if priority < 0:
+            priority = 0
+
+        return priority
+
     def __init__(self,
                  host="localhost",
                  port=5672,
@@ -62,6 +71,7 @@ class RabbitmqClient(MqClient):
     #    return body
 
     def pop(self):
+        import json
         respon = self.channel.basic_get(queue=self.queue, no_ack=True)
         task = {}
         if not respon[0] is None:
@@ -70,17 +80,17 @@ class RabbitmqClient(MqClient):
                 priority = respon[1].priority
             except:
                 pass
-            level = self.maxPriority - priority
-            task = {"url": respon[2], "level": level}
+            data = respon[2]
+            task = json.loads(data)
+            task["priority"] = priority
         return task
 
-    def push(self, data, level=None):
-        if level is None:
-            level = self.defaultLevel
-        if level > self.maxLevel:
-            level = self.maxLevel
+    def push(self, task):
+        import json
+        data = json.dumps(task)
 
-        priority = self.maxPriority - level
+        priority = self.getPriority(
+            level=task.get("level"), priorityOffset=task.get("priorityOffset"))
         self.channel.basic_publish(
             exchange='',
             routing_key=self.queue,
@@ -94,15 +104,25 @@ class RabbitmqClient(MqClient):
 def main():
     # mqClient = RabbitmqClient(host="172.17.0.1")
     #mqClient = RabbitmqClient(host="rabbitmq.news.linyz.net")
-    mqClient = RabbitmqClient("9.111.111.233")
+    mqClient = RabbitmqClient("rabbitmq.news.linyz.net")
     import logging
     logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s")
     import sys
+    task = {
+        "url": "http://news.sina.com.cn/",
+        "level": 0,
+        "maxLevel": 5,
+        "priorityOffset": 0,
+        "type": "defaultWeb"
+    }
+
     if len(sys.argv) >= 3:
         url = sys.argv[1]
         level = int(float(sys.argv[2]))
         logging.critical("[{}]{}".format(level, url))
-        mqClient.push(url, level)
+        task["level"] = level
+        task["url"] = url
+        mqClient.push(task)
         return
 
     if len(sys.argv) == 2:
@@ -111,11 +131,13 @@ def main():
             for url in f:
                 url = url.strip()
                 logging.critical("[{}]{}".format(level, url))
-                mqClient.push(url, level)
+                task.update("level", level)
+                task.update("url", url)
+                mqClient.push(task)
         return
 
-    mqClient.push("http://news.sina.com.cn/", 0)
-    # print(mqClient.pop())
+    mqClient.push(task)
+    #print(mqClient.pop())
 
 
 if __name__ == "__main__":

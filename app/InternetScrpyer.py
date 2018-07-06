@@ -1,13 +1,10 @@
-import logging 
+import logging
 from PageScrpyer import PageScrpyer as Scrpyer
 from ElasticsearchClient import ElasticsearchClient as DBClient
 from RabbitmqClient import RabbitmqClient as MqClient
 
 
 class InternetScrpyer():
-    mqClient = None
-    scrpyer = None
-    dbClient = None
     sleepSec = 0.1
 
     def __init__(self, config):
@@ -16,7 +13,11 @@ class InternetScrpyer():
         self.dbClient = DBClient(hosts=config.get('db').get('hosts'))
         return
 
-    def scrpyPage(self, url, level=None):
+    def scrpyPage(self, task):
+        from copy import deepcopy
+
+        level = task.get("level")
+        url = task.get("url")
         if level is None:
             level = self.mqClient.defaultLevel
 
@@ -41,20 +42,18 @@ class InternetScrpyer():
             subUrl = link.get("url")
             hasUrl = self.dbClient.hasUrl(subUrl)
             if hasUrl < 1:
-                self.mqClient.push(data=subUrl, level=subLevel)
+                subTask = deepcopy(task)
+                subTask["url"] = subUrl
+                subTask["level"] = subLevel
+                self.mqClient.push(subTask)
 
         return page
 
     def doScrpy(self):
         import time
-        res = {
-            'level': None,
-            'url': None,
-            'error': '',
-            'page': False
-        }
+        res = {'level': None, 'url': None, 'error': '', 'page': False}
 
-        try: 
+        try:
             task = self.mqClient.pop()
             if not task:
                 time.sleep(self.sleepSec)
@@ -62,9 +61,9 @@ class InternetScrpyer():
 
             level = task.get("level")
             res['level'] = level
-            url = task.get("url").decode()
+            url = task.get("url")
             res['url'] = url
-            if self.scrpyPage(url, level=level):
+            if self.scrpyPage(task):
                 res["page"] = True
         except Exception as e:
             res['error'] = str(e)
@@ -73,13 +72,15 @@ class InternetScrpyer():
     def run(self):
         while True:
             res = self.doScrpy()
+            print(res)
             if not res:
                 continue
 
             log = "[{:02d}][{}][{:s}]{:s}".format(
-                res.get('level'), res.get('page'), res.get('error'), res.get('url'))
+                res.get('level'), res.get('page'), res.get('error'),
+                res.get('url'))
             if not res.get('error'):
-                logging.log(logging.INFO+1, log)
+                logging.log(logging.INFO + 1, log)
             else:
                 logging.warning(log)
 
@@ -89,15 +90,13 @@ def main():
     import sys
     config = {
         'log': {
-            'level': 20
+            'level': 21
         },
         'mq': {
-            'host': 'localhost'
+            'host': 'rabbitmq.news.linyz.net'
         },
         'db': {
-            'hosts': [
-                'localhost:9200'
-            ]
+            'hosts': ['elk.news.linyz.net:9200']
         }
     }
 
@@ -119,7 +118,8 @@ def main():
     # config['mq']['host'] = '9.111.111.233'
     # config['db']['hosts'] = ['9.111.213.147:9200']
     logging.basicConfig(
-        level=config['log']['level'], format="%(asctime)s - %(levelname)s - %(message)s")
+        level=config['log']['level'],
+        format="%(asctime)s - %(levelname)s - %(message)s")
     logging.log(level=100, msg=config)
     scrpyer = InternetScrpyer(config=config)
     scrpyer.run()
