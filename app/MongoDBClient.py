@@ -1,29 +1,25 @@
 class MongoDBClient():
-    def __init__(self, url):
+    def __init__(self, url="mongodb://localhost:27017/"):
         import pymongo
         self.client = pymongo.MongoClient(url)
         return
 
-    def postNews(self, doc, dbName="news", collectionName="webNews"):
-        import datetime
-        try:
-            doc["bodyTs"] = datetime.datetime.fromtimestamp(doc["bodyTs"])
-        except:
-            pass
+    def postNews(self, doc, index="news", docType="webNews"):
+        # import datetime
+        # try:
+        #     doc["bodyTs"] = datetime.datetime.fromtimestamp(doc["bodyTs"])
+        # except:
+        #     pass
+        #
+        # try:
+        #     doc["timestampScrpy"] = datetime.datetime.fromtimestamp(
+        #         doc["bodyTs"])
+        # except:
+        #     pass
 
-        try:
-            doc["timestampScrpy"] = datetime.datetime.fromtimestamp(
-                doc["bodyTs"])
-        except:
-            pass
-
-        db = self.client.get_database("dbName")
-        collection = db.get_collection("webNews")
-        docIDs = collection.insert_one(doc).inserted_id
-        if len(docIDs) > 0:
-            docID = docIDs[0]
-        else:
-            docID = None
+        db = self.client.get_database(index)
+        collection = db.get_collection(docType)
+        docID = collection.insert_one(doc).inserted_id
 
         return docID
 

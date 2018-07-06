@@ -18,11 +18,18 @@
         }
     },
     "mappings": {
-        "page": {
+        "webNews": {
             "properties": {
                 "timestampScrpy": {
                     "type": "date",
                     "format": "epoch_second"
+                },
+                "bodyTs": {
+                    "type": "date",
+                    "format": "epoch_second"
+                },
+                "bodyTsFallback": {
+                    "type": "boolean"
                 },
                 "title": {
                     "type": "text"
@@ -34,29 +41,6 @@
                     "type": "text",
                     "analyzer": "url",
                     "search_analyzer": "url"
-                },
-                "meta": {
-                    "type": "nested",
-                    "properties": {
-                        "keywords": {
-                            "type": "text",
-                            "analyzer": "ik_smart"
-                        }
-                    }
-                },
-                "links": {
-                    "type": "nested",
-                    "properties": {
-                        "title": {
-                            "type": "text",
-                            "analyzer": "ik_smart"
-                        },
-                        "url": {
-                            "type": "text",
-                            "analyzer": "url",
-                            "search_analyzer": "url"
-                        }
-                    }
                 }
             }
         }

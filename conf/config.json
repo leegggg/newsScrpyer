@@ -3,11 +3,16 @@
         "level": 21
     },
     "mq": {
-        "host": "localhost"
+        "host": "rabbitmq.news.linyz.net"
     },
     "db": {
-        "hosts": [
-            "localhost:9200"
-        ]
+        "index": "news",
+        "docType": "webNews",
+        "elasticsearch": {
+            "hosts": ["elk.news.linyz.net:9200"]
+        },
+        "mongodb": {
+            "url": "mongodb://root:passw0rd@mangodb.news.linyz.net:27017/"
+        }
     }
 }

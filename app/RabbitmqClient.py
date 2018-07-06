@@ -113,7 +113,8 @@ def main():
         "level": 0,
         "maxLevel": 5,
         "priorityOffset": 0,
-        "type": "defaultWeb"
+        "type": "defaultWeb",
+        "forceScrpy": True
     }
 
     if len(sys.argv) >= 3:
@@ -131,8 +132,8 @@ def main():
             for url in f:
                 url = url.strip()
                 logging.critical("[{}]{}".format(level, url))
-                task.update("level", level)
-                task.update("url", url)
+                task["level"] = level
+                task["url"] = url
                 mqClient.push(task)
         return
 

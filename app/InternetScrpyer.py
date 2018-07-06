@@ -1,6 +1,6 @@
 import logging
 from PageScrpyer import PageScrpyer as Scrpyer
-from ElasticsearchClient import ElasticsearchClient as DBClient
+from DBClient import DBClinet as DBClient
 from RabbitmqClient import RabbitmqClient as MqClient
 
 
@@ -10,7 +10,7 @@ class InternetScrpyer():
     def __init__(self, config):
         self.scrpyer = Scrpyer()
         self.mqClient = MqClient(host=config.get('mq').get('host'))
-        self.dbClient = DBClient(hosts=config.get('db').get('hosts'))
+        self.dbClient = DBClient(config=config.get('db'))
         return
 
     def scrpyPage(self, task):
@@ -30,7 +30,7 @@ class InternetScrpyer():
         # logging.log(logging.INFO+1,
         #             "[{:02d}][{:02d}]{:s}".format(level, hasUrl, url))
 
-        if level > 0 and hasUrl > 0:
+        if task.get("forceScrpy") and hasUrl > 0:
             return {}
 
         page = self.scrpyer.scrypyURL(url)
@@ -72,7 +72,6 @@ class InternetScrpyer():
     def run(self):
         while True:
             res = self.doScrpy()
-            print(res)
             if not res:
                 continue
 
@@ -96,7 +95,14 @@ def main():
             'host': 'rabbitmq.news.linyz.net'
         },
         'db': {
-            'hosts': ['elk.news.linyz.net:9200']
+            "index": "news",
+            "docType": "webNews",
+            "elasticsearch": {
+                "hosts": ["elk.news.linyz.net:9200"]
+            },
+            "mongodb": {
+                "url": "mongodb://root:passw0rd@mangodb.news.linyz.net:27017/"
+            }
         }
     }
 

@@ -5,18 +5,27 @@ class ElasticsearchClient():
     # index = "news"
     # docType = "page"
 
-    def __init__(self, hosts=["localhost:9200"], index="news", docType="page"):
+    def __init__(self,
+                 hosts=["localhost:9200"],
+                 index="news",
+                 docType="webNews"):
         from elasticsearch import Elasticsearch
         self.es = Elasticsearch(hosts=hosts)
         self.index = index
         self.docType = docType
         return
 
-    def postNews(self, news):
+    def postNews(self, news, index=None, docType=None, id=None):
         import uuid
-        id = str(uuid.uuid4())
-        self.es.index(
-            index=self.index, doc_type=self.docType, id=id, body=news)
+        if not index:
+            index = self.index
+        if not docType:
+            docType = self.docType
+        if not id:
+            id = str(uuid.uuid4())
+
+        self.es.index(index=index, doc_type=docType, id=id, body=news)
+
         return
 
     def getNews(self, attrs):
@@ -25,7 +34,8 @@ class ElasticsearchClient():
 
     def hasUrl(self, url):
         searchBody = {"size": 0, "query": {"term": {"url": url}}}
-        res = self.es.search(index=self.index, body=searchBody)
+        indexPatten = self.index + "*"
+        res = self.es.search(index=indexPatten, body=searchBody)
 
         hits = 0
         try:
