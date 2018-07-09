@@ -30,7 +30,7 @@ class InternetScrpyer():
         # logging.log(logging.INFO+1,
         #             "[{:02d}][{:02d}]{:s}".format(level, hasUrl, url))
 
-        if task.get("forceScrpy") and hasUrl > 0:
+        if hasUrl > 0 and not task.get("forceScrpy"):
             return {}
 
         page = self.scrpyer.scrypyURL(url)
@@ -45,6 +45,7 @@ class InternetScrpyer():
                 subTask = deepcopy(task)
                 subTask["url"] = subUrl
                 subTask["level"] = subLevel
+                subTask["forceScrpy"] = False
                 self.mqClient.push(subTask)
 
         return page
