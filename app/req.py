@@ -21,7 +21,7 @@ def getDom(url):
     import bs4
     import requests
     import chardet
-    req = requests.get(url, headers=headers, timeout=(10, 10))
+    req = requests.get(url, headers=headers, timeout=(10, 10), stream=True)
     # req = requests.get(url)
     # page = str(req.content, req.encoding)
     # print(req.encoding)
@@ -38,6 +38,9 @@ def getDom(url):
         logging.debug("ContentType:[{}]{}".format(req.headers['content-type'],
                                                   url))
         return page
+
+    if (not req.status_code) or (not req.status_code < 400):
+        raise Exception("status_code: {}".format(req.status_code))
 
     try:
         logging.debug("tryUtf8:{}".format(url))
@@ -64,7 +67,10 @@ def main():
     # getDom('http://news.sina.com.cn/')
     # getDom('http://zhuanlan.sina.com.cn/')
     # getDom('http://i1.sinaimg.cn/edu/sinaopen/SinaOpencourse_V2.02.apk')
-    getDom('http://news.163.com')
+    # dom = getDom('http://news.163.com')
+    dom = getDom('http://news.163.com/abb')  #404
+    # getDom('http://shouji.www.yxdown.com/down?id=509322') # incorrect type
+    print(dom)
 
     return 0
 
