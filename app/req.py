@@ -37,7 +37,8 @@ def getDom(url):
     else:
         logging.debug("ContentType:[{}]{}".format(req.headers['content-type'],
                                                   url))
-        return page
+        raise Exception("ContentType: {}".format(
+            req.headers.get('content-type')))
 
     if (not req.status_code) or (not req.status_code < 400):
         raise Exception("status_code: {}".format(req.status_code))

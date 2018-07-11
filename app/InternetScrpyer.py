@@ -90,7 +90,7 @@ def main():
     import sys
     config = {
         'log': {
-            'level': 10
+            'level': 21
         },
         'mq': {
             'host': 'rabbitmq.news.linyz.net'
