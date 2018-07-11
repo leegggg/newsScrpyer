@@ -69,7 +69,7 @@ class WebScrpyer:
             if match:
                 for dateStr in match:
                     try:
-                        ts = dateparser.parse(dateStr).timestamp()
+                        ts = dateparser.parse(dateStr).timestamp() + 3600 * 8
                     except:
                         continue
 
