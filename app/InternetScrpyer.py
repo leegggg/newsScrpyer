@@ -34,6 +34,7 @@ class InternetScrpyer():
             return {}
 
         page = self.scrpyer.scrypyURL(url)
+        page['level'] = level
         self.dbClient.postNews(page)
         subLevel = level + 1
         for link in page.get("links"):
