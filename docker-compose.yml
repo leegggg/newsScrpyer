@@ -2,7 +2,7 @@ version: '3.4'
 services:
   newsscrpyer:
     image: mscp.linyz.net/news-scrpyer:latest
-    restart: always
+    restart: on-failure
 #     replicas: ${SCRPYER_REPLICAS}
 #     deploy:
 #       replicas: ${SCRPYER_REPLICAS}
