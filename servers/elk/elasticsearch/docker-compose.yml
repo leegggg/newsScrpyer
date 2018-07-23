@@ -4,6 +4,7 @@ services:
 
   elasticsearch:
     image: mscp.linyz.net/elasticsearch:v6.2.4-ik
+    restart: on-failure 
     container_name: elasticsearch
     volumes:
       - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
