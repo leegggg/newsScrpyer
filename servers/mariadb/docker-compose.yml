@@ -17,7 +17,7 @@ services:
     links:
       - db
     environment:
-      PMA_HOST: 172.20.0.1
+      PMA_HOST: 172.18.0.1
       PMA_PORT: 3306
       AUTH_TYPE: cookie
     ports:
