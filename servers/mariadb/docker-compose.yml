@@ -9,7 +9,7 @@ services:
       MYSQL_DATABASE: dbdatabase
       MYSQL_ROOT_HOST: "%"
     volumes:
-        - /Users/ylin/marialdb/database:/var/lib/mysql
+        - /home/ylin/marialdb/database:/var/lib/mysql
     ports:
         - 3306:3306
   phpmyadmin:
