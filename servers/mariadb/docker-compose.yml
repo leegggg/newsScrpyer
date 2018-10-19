@@ -1,0 +1,24 @@
+version: "2"
+services:
+  db:
+    image: mariadb
+    environment:
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: dbpassword
+      MYSQL_ROOT_PASSWORD: dbrootpassword
+      MYSQL_DATABASE: dbdatabase
+      MYSQL_ROOT_HOST: "%"
+    volumes:
+        - /Users/ylin/marialdb/database:/var/lib/mysql
+    ports:
+        - 3306:3306
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db
+    environment:
+      PMA_HOST: 172.20.0.1
+      PMA_PORT: 3306
+      AUTH_TYPE: cookie
+    ports:
+      - '39080:80'
